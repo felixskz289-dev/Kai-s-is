@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>快乐汉语 · Урок 3 для детей 9–12 лет</title>
+<style>
+:root{
+  --pink:#ff6b9d; --purple:#a06ee8; --blue:#4dabf7; --green:#51cf66;
+  --yellow:#ffd43b; --orange:#ff922b; --red:#ff6b6b; --ink:#2b2d42;
+  --bg:#fff9f0; --card:#ffffff;
+}
+*{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--ink); padding-bottom:60px;}
+h1,h2,h3{line-height:1.2;}
+
+/* ===== Top bar ===== */
+.topbar{position:sticky; top:0; z-index:50; background:linear-gradient(90deg,#ff6b9d,#a06ee8,#4dabf7); padding:10px 14px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; box-shadow:0 2px 10px rgba(0,0,0,.15);}
+.topbar .logo{color:#fff; font-weight:800; font-size:18px; margin-right:auto; text-shadow:0 1px 3px rgba(0,0,0,.2);}
+.topbar button{border:none; border-radius:999px; padding:8px 14px; font-weight:700; font-size:14px; cursor:pointer; background:rgba(255,255,255,.92); color:var(--ink); transition:transform .1s;}
+.topbar button:active{transform:scale(.93);}
+.navbtn{background:rgba(255,255,255,.25); color:#fff !important;}
+.score-mini{background:#ffd43b !important;}
+
+section{max-width:860px; margin:22px auto; padding:0 14px;}
+.stage{background:var(--card); border-radius:22px; padding:20px; box-shadow:0 4px 18px rgba(43,45,66,.08); margin-bottom:26px;}
+.stage h2{font-size:24px; margin-bottom:4px;}
+.stage .sub{color:#868e96; font-size:14px; margin-bottom:14px;}
+.badge{display:inline-block; background:var(--yellow); border-radius:999px; padding:3px 12px; font-size:13px; font-weight:700; margin-bottom:8px;}
+.badge.new{background:#d0f4de;}
+.badge.rep{background:#fde2e4;}
+.badge.game{background:#dbe9ff;}
+.badge.final{background:#ffe8cc;}
+
+/* ===== Timeline ===== */
+.timeline{display:flex; flex-direction:column; gap:0; position:relative; padding-left:26px;}
+.timeline::before{content:''; position:absolute; left:8px; top:8px; bottom:8px; width:4px; background:linear-gradient(#ff6b9d,#4dabf7); border-radius:4px;}
+.titem{position:relative; padding:8px 0 8px 14px;}
+.titem::before{content:''; position:absolute; left:-23px; top:14px; width:14px; height:14px; border-radius:50%; background:#fff; border:4px solid var(--pink);}
+.titem b{font-size:16px;}
+.titem .t{color:#868e96; font-size:13px; font-weight:600;}
+.titem p{font-size:14px; color:#495057;}
+
+/* ===== Buttons ===== */
+.bigbtn{display:inline-block; border:none; border-radius:16px; padding:14px 22px; font-size:17px; font-weight:800; cursor:pointer; color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.15); transition:transform .1s, box-shadow .1s; margin:4px;}
+.bigbtn:active{transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,.15);}
+.bigbtn.pink{background:var(--pink);} .bigbtn.blue{background:var(--blue);} .bigbtn.green{background:var(--green);} .bigbtn.orange{background:var(--orange);} .bigbtn.purple{background:var(--purple);} .bigbtn.gray{background:#adb5bd;}
+.bigbtn.big{font-size:22px; padding:18px 30px;}
+
+/* ===== Flashcards ===== */
+.flashwrap{display:flex; flex-direction:column; align-items:center; gap:12px;}
+.flashcard{width:280px; height:220px; perspective:900px; cursor:pointer;}
+.flashinner{width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform .5s;}
+.flashcard.flipped .flashinner{transform:rotateY(180deg);}
+.fface{position:absolute; inset:0; border-radius:24px; display:flex; flex-direction:column; align-items:center; justify-content:center; backface-visibility:hidden; box-shadow:0 8px 20px rgba(0,0,0,.12);}
+.fface.front{background:linear-gradient(135deg,#fff,#ffe9f0); border:4px solid var(--pink);}
+.fface.back{background:linear-gradient(135deg,#fff,#e7f5ff); border:4px solid var(--blue); transform:rotateY(180deg);}
+.fface .ch{font-size:64px; font-weight:700; text-align:center;}
+.fface .py{font-size:22px; color:#7048e8; font-weight:700;}
+.fface .ru{font-size:20px; margin-top:6px; color:#343a40; text-align:center;}
+.fface .hint{position:absolute; bottom:8px; font-size:11px; color:#adb5bd;}
+.counter{font-weight:700; color:#868e96;}
+
+/* ===== Matching ===== */
+.match-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px; max-width:560px; margin:0 auto;}
+.mcol{display:flex; flex-direction:column; gap:8px;}
+.mitem{border:3px solid #dee2e6; background:#f8f9fa; border-radius:14px; padding:12px 8px; font-size:22px; font-weight:700; text-align:center; cursor:pointer; transition:all .15s; user-select:none;}
+.mitem.sel{border-color:var(--blue); background:#d0ebff; transform:scale(1.04);}
+.mitem.done{border-color:var(--green); background:#d3f9d8; color:#2b8a3e; cursor:default;}
+.mitem.wrong{border-color:var(--red); background:#ffe3e3; animation:shake .3s;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* ===== Memory ===== */
+.mem-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; max-width:520px; margin:0 auto;}
+.memcard{aspect-ratio:3/4; perspective:600px; cursor:pointer;}
+.meminner{width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform .4s;}
+.memcard.flipped .meminner{transform:rotateY(180deg);}
+.memface{position:absolute; inset:0; border-radius:14px; display:flex; align-items:center; justify-content:center; backface-visibility:hidden; font-weight:800; font-size:19px; padding:4px; text-align:center;}
+.memface.down{background:linear-gradient(135deg,var(--purple),var(--pink)); color:#fff; font-size:26px;}
+.memface.up{background:#fff; border:3px solid var(--blue); transform:rotateY(180deg);}
+.memcard.done .memface.up{background:#d3f9d8; border-color:var(--green); cursor:default;}
+
+/* ===== Quiz ===== */
+.qcard{background:#f8f9fa; border-radius:16px; padding:16px; margin-bottom:12px; border:3px solid #e9ecef;}
+.qcard .q{font-size:18px; font-weight:700; margin-bottom:10px;}
+.ans{display:block; width:100%; text-align:left; border:3px solid #dee2e6; background:#fff; border-radius:12px; padding:12px 14px; font-size:16px; font-weight:600; margin-bottom:8px; cursor:pointer; transition:all .15s;}
+.ans:hover{border-color:var(--blue);}
+.ans.right{border-color:var(--green); background:#d3f9d8;}
+.ans.wrong{border-color:var(--red); background:#ffe3e3;}
+.ans:disabled{cursor:default;}
+.locked .ans{pointer-events:none;}
+
+/* ===== Sentence builder ===== */
+.chips{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:12px 0;}
+.chip{border:3px solid var(--purple); background:#f3f0ff; color:#5f3dc4; border-radius:12px; padding:10px 16px; font-size:24px; font-weight:800; cursor:pointer; transition:transform .1s;}
+.chip:active{transform:scale(.92);}
+.chip.used{opacity:.25; pointer-events:none;}
+.slot{background:#f8f9fa; border:3px dashed #adb5bd; border-radius:16px; min-height:64px; display:flex; flex-wrap:wrap; gap:8px; justify-content:center; align-items:center; padding:10px; margin:8px 0;}
+.slot .chip{border-color:var(--green); background:#ebfbee; color:#2b8a3e;}
+.feedback{font-size:18px; font-weight:800; min-height:26px; margin-top:6px; text-align:center;}
+.feedback.ok{color:var(--green);} .feedback.no{color:var(--red);}
+
+/* ===== Scoreboard ===== */
+.scores{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+.team{background:#f8f9fa; border-radius:18px; padding:14px; text-align:center; min-width:150px; border:3px solid #e9ecef;}
+.team input{border:none; background:transparent; font-size:17px; font-weight:800; text-align:center; width:100%; color:var(--ink); outline:none;}
+.team .pts{font-size:44px; font-weight:900; margin:6px 0;}
+.team .pmb button{border:none; border-radius:10px; width:42px; height:42px; font-size:20px; font-weight:900; cursor:pointer; color:#fff;}
+.plus{background:var(--green);} .minus{background:#adb5bd;}
+
+/* ===== Timer ===== */
+.timerwrap{text-align:center;}
+.timer-display{font-size:56px; font-weight:900; font-variant-numeric:tabular-nums; color:var(--ink);}
+.timer-display.low{color:var(--red); animation:pulse 1s infinite;}
+@keyframes pulse{50%{transform:scale(1.06);}}
+.preset{display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin:8px 0;}
+.preset button{border:2px solid #dee2e6; background:#fff; border-radius:999px; padding:6px 12px; font-weight:700; cursor:pointer; font-size:13px;}
+.preset button:hover{border-color:var(--blue);}
+
+/* ===== Words ===== */
+.wordlist{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px;}
+.word{background:#fff; border:3px solid #f3d9fa; border-radius:16px; padding:12px 8px; text-align:center; cursor:pointer; transition:transform .12s;}
+.word:hover{transform:scale(1.05); border-color:var(--purple);}
+.word .ch{font-size:38px; font-weight:700;}
+.word .py{color:#7048e8; font-weight:700; font-size:14px;}
+.word .ru{font-size:14px; color:#495057;}
+
+/* ===== Roles ===== */
+.roles{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+.rolecard{border-radius:18px; padding:14px; border:3px dashed;}
+.roleA{border-color:var(--pink); background:#fff0f5;}
+.roleB{border-color:var(--blue); background:#edf7ff;}
+.rolecard h3{margin-bottom:8px;}
+.rep{font-size:20px; margin:7px 0; display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.rep .zh{font-weight:800; font-size:24px;}
+.rep .py{color:#868e96; font-size:13px; font-weight:600;}
+.rep .ru{font-size:14px; width:100%;}
+.speak{border:none; background:var(--purple); color:#fff; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:14px; flex:none;}
+
+.bonus{background:linear-gradient(135deg,#fff9db,#ffe8cc); border-radius:16px; padding:14px; margin-top:12px; border:3px solid var(--yellow); font-size:15px;}
+.note{font-size:13px; color:#868e96; margin-top:10px;}
+hr.sep{border:none; border-top:3px dashed #e9ecef; margin:16px 0;}
+@media(max-width:520px){ .roles{grid-template-columns:1fr;} .flashcard{width:240px;height:200px;} .fface .ch{font-size:48px;} }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">🇨🇳 快乐汉语 · Урок 3</div>
+  <button class="navbtn" onclick="scrollToId('plan')">📋 План</button>
+  <button class="navbtn" onclick="scrollToId('warmup')">🎬 1</button>
+  <button class="navbtn" onclick="scrollToId('review')">🔁 2</button>
+  <button class="navbtn" onclick="scrollToId('newwords')">🆕 3</button>
+  <button class="navbtn" onclick="scrollToId('cities')">🏙 4</button>
+  <button class="navbtn" onclick="scrollToId('builder')">💬 5</button>
+  <button class="navbtn" onclick="scrollToId('tournament')">🏆 6</button>
+  <button class="navbtn" onclick="scrollToId('final')">🎓 7</button>
+  <button class="score-mini" onclick="scrollToId('scoreboard')">⭐ <span id="miniScore">0 : 0</span></button>
+</div>
+
+<!-- ================= ПЛАН ================= -->
+<section id="plan">
+  <div class="stage">
+    <h2>📋 План урока · 120 минут · 4 человека</h2>
+    <div class="sub">Две команды по 2 человека. Уроки 1–2 — повторение, урок 3 — новый материал. Баллы — кнопками ➕/➖.</div>
+    <div class="timeline">
+      <div class="titem"><span class="t">0:00–0:10 · 10 мин</span><br><b>🎬 Разминка «Привет, Китай!»</b><p>Круговое приветствие с озвучкой + игра «Приветственный поезд» с движением.</p></div>
+      <div class="titem"><span class="t">0:10–0:35 · 25 мин</span><br><b>🔁 Повторение уроков 1–2</b><p>Флешкарточки: все слова двух уроков (8 мин) → викторина «Кто быстрее» (7 мин) → матчинг «Иероглиф — пиньинь» (10 мин).</p></div>
+      <div class="titem"><span class="t">0:35–0:55 · 20 мин</span><br><b>🆕 Новое: урок 3 «你家在哪儿?»</b><p>Новые слова с озвучкой (家, 在, 哪儿, 北京, 上海, 香港, 他) — 10 мин → игра «Память» — 10 мин.</p></div>
+      <div class="titem"><span class="t">0:55–1:10 · 15 мин</span><br><b>🏙 Города Китая</b><p>Эстафета «Узнай город» по картинкам + матчинг «Город — пиньинь» на скорость.</p></div>
+      <div class="titem"><span class="t">1:10–1:30 · 20 мин</span><br><b>💬 Диалоги-конструктор</b><p>Собираем предложения из кусочков (10 мин) → ролевая игра «Где ты живёшь?» (10 мин).</p></div>
+      <div class="titem"><span class="t">1:30–1:50 · 20 мин</span><br><b>🏆 Турнир «Умник»</b><p>12 вопросов (все 3 урока), команды отвечают по очереди.</p></div>
+      <div class="titem"><span class="t">1:50–2:00 · 10 мин</span><br><b>🎓 Выходные билеты + награждение</b><p>Каждый называет 3 фразы вслух, общий счёт, аплодисменты всем.</p></div>
+    </div>
+  </div>
+
+  <div class="stage timerwrap">
+    <h2>⏱️ Таймер урока</h2>
+    <div class="preset">
+      <button onclick="setTimer(10)">Разминка 10</button>
+      <button onclick="setTimer(25)">Блок 25</button>
+      <button onclick="setTimer(20)">Блок 20</button>
+      <button onclick="setTimer(15)">Блок 15</button>
+      <button onclick="setTimer(5)">5 мин</button>
+    </div>
+    <div class="timer-display" id="timerDisplay">10:00</div>
+    <button class="bigbtn green" id="timerBtn" onclick="toggleTimer()">▶ Старт</button>
+    <button class="bigbtn gray" onclick="resetTimer()">Сброс</button>
+  </div>
+
+  <div class="stage" id="scoreboard">
+    <h2>⭐ Командный счёт</h2>
+    <div class="sub">Команды по 2 человека. Названия можно переименовать.</div>
+    <div class="scores">
+      <div class="team"><input value="🐼 Команда 1" id="teamAname"><div class="pts" id="scoreA" style="color:var(--pink)">0</div><div class="pmb"><button class="plus" onclick="addScore('A',1)">+</button> <button class="minus" onclick="addScore('A',-1)">−</button></div></div>
+      <div class="team"><input value="🐯 Команда 2" id="teamBname"><div class="pts" id="scoreB" style="color:var(--blue)">0</div><div class="pmb"><button class="plus" onclick="addScore('B',1)">+</button> <button class="minus" onclick="addScore('B',-1)">−</button></div></div>
+    </div>
+    <p class="note">💡 1 балл — за честную попытку, 2 балла — победа в игре, «звёздочка» словами — за поддержку друга.</p>
+  </div>
+</section>
+
+<!-- ================= 1. РАЗМИНКА ================= -->
+<section id="warmup">
+  <div class="stage">
+    <span class="badge">🎬 Этап 1 · 10 минут</span>
+    <h2>Привет, Китай! 🇨🇳</h2>
+    <div class="sub">Все в круг. Нажимаете кнопку — дети повторяют хором, потом по очереди.</div>
+    <div style="text-align:center">
+      <button class="bigbtn pink big" onclick="speak('你好')">🔊 你好 · Nǐ hǎo · Привет!</button>
+      <button class="bigbtn blue big" onclick="speak('你好吗')">🔊 你好吗 · Nǐ hǎo ma? · Как дела?</button>
+      <button class="bigbtn green big" onclick="speak('我很好')">🔊 我很好 · Wǒ hěn hǎo · У меня всё хорошо!</button>
+    </div>
+    <div class="bonus">🤸 <b>Движение-разминка:</b> «Приветственный поезд» — первый ребёнок здоровается со вторым (你好!), второй отвечает (我很好!) и здоровается с третьим. Ошибся — приседает 2 раза, поезд едет дальше.</div>
+  </div>
+</section>
+
+<!-- ================= 2. ПОВТОРЕНИЕ УРОКОВ 1–2 ================= -->
+<section id="review">
+  <div class="stage">
+    <span class="badge rep">🔁 Этап 2 · Повторение уроков 1–2 · 25 минут</span>
+    <h2>Флешкарточки «Уроки 1 и 2»</h2>
+    <div class="sub">Показывайте карточку — кто первым поднял руку и правильно перевёл/прочитал, тот выигрывает балл для команды. Клик = перевернуть.</div>
+    <div class="flashwrap">
+      <div class="flashcard" id="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashinner">
+          <div class="fface front"><div class="ch" id="fcCh"></div><div class="hint">👆 нажми, чтобы перевернуть</div></div>
+          <div class="fface back"><div class="py" id="fcPy"></div><div class="ru" id="fcRu"></div><button class="bigbtn purple" style="font-size:14px;padding:8px 14px" onclick="event.stopPropagation();speak(document.getElementById('fcCh').textContent)">🔊 послушать</button></div>
+        </div>
+      </div>
+      <div>
+        <button class="bigbtn gray" onclick="moveFlash(-1)">⬅ Назад</button>
+        <button class="bigbtn blue" onclick="moveFlash(1)">Вперёд ➡</button>
+      </div>
+      <div class="counter" id="fcCount">1 / 17</div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <h2>⚡ Быстрая викторина «Кто быстрее»</h2>
+    <div class="sub">Показываете пиньинь + перевод — команды хором называют иероглиф. Потом наоборот: иероглиф → произношение и перевод.</div>
+    <div style="text-align:center">
+      <div id="bqCard" style="font-size:52px;font-weight:800;min-height:80px;display:flex;align-items:center;justify-content:center"></div>
+      <div id="bqSub" style="font-size:20px;color:#7048e8;font-weight:700;min-height:30px"></div>
+      <button class="bigbtn orange" onclick="showBq()">🎲 Следующий вопрос</button>
+      <button class="bigbtn purple" onclick="toggleBqAns()">👀 Показать ответ</button>
+    </div>
+  </div>
+
+  <div class="stage">
+    <h2>🧩 Матчинг «Иероглиф — пиньинь»</h2>
+    <div class="sub">Эстафета: первый игрок пары выбирает иероглиф, второй — пиньинь. Угадали → +1 балл. Команды ходят по очереди.</div>
+    <div class="match-grid" id="matchGrid"></div>
+    <div class="feedback" id="matchMsg"></div>
+    <div style="text-align:center"><button class="bigbtn gray" onclick="initMatch()">🔄 Начать заново</button></div>
+  </div>
+</section>
+
+<!-- ================= 3. НОВЫЕ СЛОВА УРОКА 3 ================= -->
+<section id="newwords">
+  <div class="stage">
+    <span class="badge new">🆕 Этап 3 · Новое: урок 3 · 20 минут</span>
+    <h2>Новые слова 第三课 «你家在哪儿?»</h2>
+    <div class="sub">Нажимайте на карточку — слово прозвучит. Сначала слушают хором 2 раза, потом каждый повторяет «по цепочке».</div>
+    <div class="wordlist" id="newWordsList"></div>
+    <hr class="sep">
+    <h3>🗣️ Образцы предложений</h3>
+    <div style="text-align:center; margin-top:8px">
+      <button class="bigbtn pink" onclick="speak('你家在哪儿')">你家在哪儿? · Где ты живёшь?</button>
+      <button class="bigbtn blue" onclick="speak('我家在北京')">我家在北京 · Я живу в Пекине</button>
+      <button class="bigbtn purple" onclick="speak('我家在上海')">我家在上海 · Я живу в Шанхае</button>
+      <button class="bigbtn green" onclick="speak('我家在香港')">我家在香港 · Я живу в Гонконге</button>
+    </div>
+    <div class="bonus">🎭 <b>Слово 他 tā — «он, его».</b> Можно спросить про друга: <button class="bigbtn purple" style="font-size:14px;padding:8px 14px" onclick="speak('他家在哪儿')">🔊 他家在哪儿? Tā jiā zài nǎr? — А где живёт он?</button></div>
+  </div>
+
+  <div class="stage">
+    <h2>🃏 Игра «Память» (в парах)</h2>
+    <div class="sub">Пары открывают по 2 карточки: иероглиф и его пиньинь/значение. Совпадение → +1 балл. Кто быстрее откроет все пары — +2.</div>
+    <div class="mem-grid" id="memGrid"></div>
+    <div class="feedback" id="memMsg" style="text-align:center">Пары: 0 / 7 · Ходов: 0</div>
+    <div style="text-align:center"><button class="bigbtn gray" onclick="initMemory()">🔄 Перемешать заново</button></div>
+  </div>
+</section>
+
+<!-- ================= 4. ГОРОДА ================= -->
+<section id="cities">
+  <div class="stage">
+    <span class="badge game">🏙 Этап 4 · 15 минут</span>
+    <h2>Города Китая</h2>
+    <div class="sub">Эстафета: ведущий показывает картинку — команда называет город, пиньинь и перевод. Потом матчинг на скорость: чья пара быстрее?</div>
+    <div style="text-align:center; margin-bottom:14px">
+      <button class="bigbtn orange big" onclick="nextCity()">🚩 Показать город!</button>
+      <div id="cityShow" style="font-size:76px;min-height:110px;margin-top:10px">❓</div>
+      <div id="cityAns" style="font-size:20px;font-weight:800;color:#7048e8;min-height:30px"></div>
+      <button class="bigbtn purple" onclick="revealCity()">👀 Ответ</button>
+      <button class="bigbtn blue" onclick="speakCity()">🔊 Прослушать</button>
+    </div>
+    <hr class="sep">
+    <h3>🧩 Матчинг «Город — пиньинь» на скорость</h3>
+    <div class="match-grid" id="cityMatch"></div>
+    <div class="feedback" id="cityMsg"></div>
+    <div style="text-align:center"><button class="bigbtn gray" onclick="initCityMatch()">🔄 Начать заново</button></div>
+  </div>
+</section>
+
+<!-- ================= 5. КОНСТРУКТОР ================= -->
+<section id="builder">
+  <div class="stage">
+    <span class="badge">💬 Этап 5 · 20 минут</span>
+    <h2>Диалог-конструктор</h2>
+    <div class="sub">Соберите предложение из кусочков (нажимайте по порядку). Проверьте и прочитайте вслух — ведущий слушает произношение.</div>
+    <div class="slot" id="slot"></div>
+    <div class="chips" id="chips"></div>
+    <div style="text-align:center">
+      <button class="bigbtn green" onclick="checkSentence()">✅ Проверить</button>
+      <button class="bigbtn gray" onclick="renderSentence()">🔄 Другое предложение</button>
+    </div>
+    <div class="feedback" id="sbMsg"></div>
+    <div class="bonus" style="text-align:center">🎯 Перевод для сборки: <b id="sbTarget"></b></div>
+  </div>
+
+  <div class="stage">
+    <h2>🎭 Ролевая игра «Где ты живёшь?»</h2>
+    <div class="sub">Пары выходят «на сцену». Вместо 北京 подставьте любой город (北京/上海/香港). Перед выступлением послушайте озвучку!</div>
+    <div class="roles">
+      <div class="rolecard roleA"><h3>🅰️ Ученик А</h3>
+        <div class="rep"><button class="speak" onclick="speak('你好')">🔊</button><span class="zh">你好!</span><span class="py">Nǐ hǎo!</span><span class="ru">Привет!</span></div>
+        <div class="rep"><button class="speak" onclick="speak('你叫什么')">🔊</button><span class="zh">你叫什么?</span><span class="py">Nǐ jiào shénme?</span><span class="ru">Как тебя зовут?</span></div>
+        <div class="rep"><button class="speak" onclick="speak('你是哪国人')">🔊</button><span class="zh">你是哪国人?</span><span class="py">Nǐ shì nǎ guó rén?</span><span class="ru">Ты из какой страны?</span></div>
+        <div class="rep"><button class="speak" onclick="speak('你家在哪儿')">🔊</button><span class="zh">你家在哪儿?</span><span class="py">Nǐ jiā zài nǎr?</span><span class="ru">Где ты живёшь?</span></div>
+      </div>
+      <div class="rolecard roleB"><h3>🅱️ Ученик Б</h3>
+        <div class="rep"><button class="speak" onclick="speak('你好')">🔊</button><span class="zh">你好!</span><span class="py">Nǐ hǎo!</span><span class="ru">Привет!</span></div>
+        <div class="rep"><button class="speak" onclick="speak('我叫小龙')">🔊</button><span class="zh">我叫小龙。</span><span class="py">Wǒ jiào Xiǎolóng.</span><span class="ru">Меня зовут… (своё имя)</span></div>
+        <div class="rep"><button class="speak" onclick="speak('我是俄罗斯人')">🔊</button><span class="zh">我是俄罗斯人。</span><span class="py">Wǒ shì Éluósī rén.</span><span class="ru">Я из России 🇷🇺</span></div>
+        <div class="rep"><button class="speak" onclick="speak('我家在北京')">🔊</button><span class="zh">我家在北京。</span><span class="py">Wǒ jiā zài Běijīng.</span><span class="ru">Я живу в Пекине 🏯</span></div>
+      </div>
+    </div>
+    <div class="bonus">🌟 <b>Бонус-реплика про третьего:</b> А спрашивает, указывая на зрителя: <button class="bigbtn purple" style="font-size:14px;padding:8px 14px" onclick="speak('他家在哪儿')">🔊 他家在哪儿?</button> — «А где живёт он?» Отвечает класс: <button class="bigbtn purple" style="font-size:14px;padding:8px 14px" onclick="speak('他家在上海')">🔊 他家在上海。</button></div>
+    <div class="bonus">🏅 <b>Критерии (макс. 2 балла):</b> 1 балл — все реплики без подсказок, 1 балл — хорошее произношение с тонами.</div>
+  </div>
+</section>
+
+<!-- ================= 6. ТУРНИР ================= -->
+<section id="tournament">
+  <div class="stage">
+    <span class="badge final">🏆 Этап 6 · 20 минут</span>
+    <h2>Командный турнир «Умник»</h2>
+    <div class="sub">12 вопросов по всем трём урокам. Команды отвечают по очереди: верно — +1 балл; не знает — вопрос уходит другой команде (без балла).</div>
+    <div id="quizBox"></div>
+    <div style="text-align:center"><button class="bigbtn orange" id="quizNextBtn" onclick="nextQuiz()">🎲 Следующий вопрос</button></div>
+    <div class="feedback" id="quizProgress" style="margin-top:8px"></div>
+  </div>
+</section>
+
+<!-- ================= 7. ФИНАЛ ================= -->
+<section id="final">
+  <div class="stage">
+    <span class="badge final">🎓 Этап 7 · 10 минут</span>
+    <h2>Выходные билеты + награждение</h2>
+    <div class="sub">Каждый вытягивает билет и вслух называет 3 фразы. Остальные повторяют хором. За каждую фразу — звёздочка!</div>
+    <div style="text-align:center">
+      <button class="bigbtn pink big" onclick="nextTicket()">🎫 Выдать билет</button>
+      <div id="ticketBox" style="font-size:20px;font-weight:700;margin-top:14px;min-height:90px;background:#f8f9fa;border-radius:16px;padding:16px;border:3px dashed var(--pink)">Нажмите кнопку, чтобы выдать билет…</div>
+    </div>
+    <hr class="sep">
+    <div style="text-align:center">
+      <button class="bigbtn green big" onclick="finishLesson()">🏁 Подвести итог и поздравить!</button>
+      <div id="finalMsg" class="feedback" style="font-size:20px"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ============ ОЗВУЧКА ============ */
+function speak(text){
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang='zh-CN'; u.rate=0.75; u.pitch=1.05;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function scrollToId(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});}
+
+/* ============ ТАЙМЕР ============ */
+let tSec=600, tInt=null;
+function renderTimer(){
+  const m=Math.floor(tSec/60), s=tSec%60;
+  document.getElementById('timerDisplay').textContent = m+':'+String(s).padStart(2,'0');
+  document.getElementById('timerDisplay').classList.toggle('low', tSec<=60 && tInt);
+}
+function setTimer(min){ tSec=min*60; resetTimer(); renderTimer(); }
+function toggleTimer(){
+  const btn=document.getElementById('timerBtn');
+  if(tInt){ clearInterval(tInt); tInt=null; btn.textContent='▶ Старт'; renderTimer(); return; }
+  btn.textContent='⏸ Пауза';
+  tInt=setInterval(()=>{
+    tSec--; renderTimer();
+    if(tSec<=0){ clearInterval(tInt); tInt=null; btn.textContent='▶ Старт'; beep(); tSec=0; renderTimer(); }
+  },1000);
+}
+function resetTimer(){ if(tInt){clearInterval(tInt); tInt=null;} document.getElementById('timerBtn').textContent='▶ Старт'; renderTimer(); }
+function beep(){
+  try{
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    [0,0.25,0.5].forEach(t=>{
+      const o=ctx.createOscillator(), g=ctx.createGain();
+      o.connect(g); g.connect(ctx.destination); o.frequency.value=880;
+      g.gain.setValueAtTime(0.3, ctx.currentTime+t);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+t+0.2);
+      o.start(ctx.currentTime+t); o.stop(ctx.currentTime+t+0.22);
+    });
+  }catch(e){}
+}
+renderTimer();
+
+/* ============ СЧЁТ ============ */
+let sA=0, sB=0;
+function addScore(t,d){
+  if(t==='A') sA=Math.max(0,sA+d); else sB=Math.max(0,sB+d);
+  document.getElementById('scoreA').textContent=sA;
+  document.getElementById('scoreB').textContent=sB;
+  document.getElementById('miniScore').textContent=sA+' : '+sB;
+}
+
+/* ============ ПОВТОРЕНИЕ: ФЛЕШКАРТОЧКИ (уроки 1–2) ============ */
+const reviewWords=[
+  {ch:'你', py:'nǐ', ru:'ты, вы'},
+  {ch:'好', py:'hǎo', ru:'хорошо'},
+  {ch:'你好!', py:'Nǐ hǎo!', ru:'Привет!'},
+  {ch:'吗', py:'ma', ru:'вопросительная частица'},
+  {ch:'你好吗?', py:'Nǐ hǎo ma?', ru:'Как дела?'},
+  {ch:'我', py:'wǒ', ru:'я'},
+  {ch:'很', py:'hěn', ru:'очень'},
+  {ch:'我很好。', py:'Wǒ hěn hǎo.', ru:'У меня всё хорошо.'},
+  {ch:'叫', py:'jiào', ru:'зваться'},
+  {ch:'什么', py:'shénme', ru:'что'},
+  {ch:'是', py:'shì', ru:'быть'},
+  {ch:'哪', py:'nǎ', ru:'который'},
+  {ch:'国', py:'guó', ru:'страна'},
+  {ch:'人', py:'rén', ru:'человек'},
+  {ch:'中国', py:'Zhōngguó', ru:'Китай 🇨🇳'},
+  {ch:'英国', py:'Yīngguó', ru:'Англия 🇬🇧'},
+  {ch:'美国', py:'Měiguó', ru:'Америка, США 🇺🇸'}
+];
+let fi=0;
+function renderFlash(){
+  const w=reviewWords[fi];
+  document.getElementById('fcCh').textContent=w.ch;
+  document.getElementById('fcPy').textContent=w.py;
+  document.getElementById('fcRu').textContent=w.ru;
+  document.getElementById('fcCount').textContent=(fi+1)+' / '+reviewWords.length;
+  document.getElementById('flashcard').classList.remove('flipped');
+}
+function moveFlash(d){ fi=(fi+d+reviewWords.length)%reviewWords.length; renderFlash(); }
+renderFlash();
+
+/* ============ БЫСТРАЯ ВИКТОРИНА ============ */
+let bqCur=null, bqShown=false;
+function showBq(){
+  bqCur=reviewWords[Math.floor(Math.random()*reviewWords.length)];
+  bqShown=false;
+  if(Math.random()<0.5){
+    document.getElementById('bqCard').textContent=bqCur.py;
+    document.getElementById('bqSub').textContent='«'+bqCur.ru.replace(/[🇨🇳🇬🇧🇺🇸]/g,'').trim()+'»';
+    bqCur.mode='toChar';
+    document.getElementById('bqCard').style.fontSize='40px';
+  }else{
+    document.getElementById('bqCard').textContent=bqCur.ch;
+    document.getElementById('bqSub').textContent='';
+    bqCur.mode='toPy';
+    document.getElementById('bqCard').style.fontSize='56px';
+  }
+}
+function toggleBqAns(){
+  if(!bqCur) return;
+  const card=document.getElementById('bqCard'), sub=document.getElementById('bqSub');
+  bqShown=!bqShown;
+  if(bqCur.mode==='toChar'){
+    card.textContent=bqShown? bqCur.ch : bqCur.py;
+    sub.textContent=bqShown? bqCur.ru : '«'+bqCur.ru.replace(/[🇨🇳🇬🇧🇺🇸]/g,'').trim()+'»';
+  }else{
+    card.textContent=bqCur.ch;
+    sub.textContent=bqShown? bqCur.py+' — '+bqCur.ru : '';
+  }
+}
+showBq();
+
+/* ============ МАТЧИНГ (универсальный) ============ */
+function buildMatch(gridId, msgId, pairs){
+  const grid=document.getElementById(gridId);
+  grid.innerHTML='';
+  const msg=document.getElementById(msgId);
+  let selL=null, done=0;
+  const right=pairs.map((p,i)=>({...p, key:i})).sort(()=>Math.random()-0.5);
+  const leftCol=document.createElement('div'); leftCol.className='mcol';
+  const rightCol=document.createElement('div'); rightCol.className='mcol';
+  pairs.forEach((p,i)=>{
+    const l=document.createElement('div'); l.className='mitem'; l.textContent=p.l; l.dataset.key=i;
+    l.onclick=()=>{
+      if(l.classList.contains('done'))return;
+      leftCol.querySelectorAll('.mitem').forEach(x=>x.classList.remove('sel'));
+      l.classList.add('sel'); selL=l;
+    };
+    leftCol.appendChild(l);
+  });
+  right.forEach(r=>{
+    const it=document.createElement('div'); it.className='mitem'; it.textContent=r.r; it.dataset.key=r.key;
+    it.onclick=()=>{
+      if(it.classList.contains('done')||!selL)return;
+      if(it.dataset.key===selL.dataset.key){
+        it.classList.add('done'); selL.classList.add('done'); selL.classList.remove('sel'); selL=null;
+        done++;
+        msg.textContent='✅ Пара найдена! Осталось: '+(pairs.length-done);
+        msg.className='feedback ok';
+        if(done===pairs.length){ msg.textContent='🎉 Все пары собраны!'; }
+      }else{
+        it.classList.add('wrong'); selL.classList.add('wrong');
+        msg.textContent='❌ Не совпало, попробуйте ещё!';
+        msg.className='feedback no';
+        const bad=it, badL=selL;
+        setTimeout(()=>{bad.classList.remove('wrong'); badL.classList.remove('wrong'); badL.classList.remove('sel');},500);
+        selL=null;
+      }
+    };
+    rightCol.appendChild(it);
+  });
+  grid.appendChild(leftCol); grid.appendChild(rightCol);
+  msg.textContent='Найдено пар: 0 / '+pairs.length; msg.className='feedback';
+}
+const matchPairs=[
+  {l:'你', r:'nǐ'}, {l:'我', r:'wǒ'}, {l:'很', r:'hěn'}, {l:'吗', r:'ma'},
+  {l:'叫', r:'jiào'}, {l:'是', r:'shì'}, {l:'国', r:'guó'}, {l:'人', r:'rén'}
+];
+function initMatch(){ buildMatch('matchGrid','matchMsg',matchPairs); }
+initMatch();
+
+/* ============ НОВЫЕ СЛОВА УРОКА 3 ============ */
+const newWords=[
+  {ch:'家', py:'jiā', ru:'дом, семья'},
+  {ch:'在', py:'zài', ru:'находиться в/на'},
+  {ch:'哪儿', py:'nǎr', ru:'где? куда?'},
+  {ch:'北京', py:'Běijīng', ru:'Пекин (столица) 🏯'},
+  {ch:'上海', py:'Shànghǎi', ru:'Шанхай 🌃'},
+  {ch:'香港', py:'Xiānggǎng', ru:'Гонконг 🌆'},
+  {ch:'他', py:'tā', ru:'он, его'}
+];
+(function(){
+  const box=document.getElementById('newWordsList');
+  newWords.forEach(w=>{
+    const d=document.createElement('div'); d.className='word';
+    d.innerHTML='<div class="ch">'+w.ch+'</div><div class="py">'+w.py+'</div><div class="ru">'+w.ru+'</div><div style="font-size:11px;color:#adb5bd;margin-top:4px">🔊 нажми — послушать</div>';
+    d.onclick=()=>speak(w.ch);
+    box.appendChild(d);
+  });
+})();
+
+/* ============ ПАМЯТЬ (урок 3) ============ */
+const memWords=[
+  {ch:'家', py:'jiā'}, {ch:'在', py:'zài'}, {ch:'哪儿', py:'nǎr'}, {ch:'北京', py:'Běijīng'},
+  {ch:'上海', py:'Shànghǎi'}, {ch:'香港', py:'Xiānggǎng'}, {ch:'他', py:'tā'}
+];
+const MEM_TOTAL=memWords.length;
+let memState={};
+function initMemory(){
+  const grid=document.getElementById('memGrid');
+  grid.innerHTML='';
+  document.getElementById('memMsg').textContent='Пары: 0 / '+MEM_TOTAL+' · Ходов: 0';
+  let cards=[];
+  memWords.forEach((w,i)=>{
+    cards.push({type:'ch', text:w.ch, id:i});
+    cards.push({type:'py', text:w.py, id:i});
+  });
+  cards.sort(()=>Math.random()-0.5);
+  memState={first:null, lock:false, found:0, moves:0};
+  cards.forEach(c=>{
+    const el=document.createElement('div'); el.className='memcard';
+    el.innerHTML='<div class="meminner"><div class="memface down">字</div><div class="memface up">'+c.text+'</div></div>';
+    el.onclick=()=>flipMem(el, c);
+    grid.appendChild(el);
+  });
+}
+function flipMem(el, c){
+  if(memState.lock || el.classList.contains('flipped')||el.classList.contains('done')) return;
+  el.classList.add('flipped');
+  if(!memState.first){ memState.first={el,c}; return; }
+  memState.moves++;
+  const f=memState.first; memState.first=null;
+  if(f.c.id===c.id && f.c.type!==c.type){
+    f.el.classList.add('done'); el.classList.add('done');
+    memState.found++;
+    document.getElementById('memMsg').textContent='Пары: '+memState.found+' / '+MEM_TOTAL+' · Ходов: '+memState.moves+(memState.found===MEM_TOTAL?' · 🎉 Готово!':'');
+  }else{
+    memState.lock=true;
+    document.getElementById('memMsg').textContent='Пары: '+memState.found+' / '+MEM_TOTAL+' · Ходов: '+memState.moves;
+    setTimeout(()=>{ f.el.classList.remove('flipped'); el.classList.remove('flipped'); memState.lock=false; },850);
+  }
+}
+initMemory();
+
+/* ============ ГОРОДА ============ */
+const cityData=[
+  {icon:'🏯', ch:'北京', py:'Běijīng', ru:'Пекин — столица Китая'},
+  {icon:'🌃', ch:'上海', py:'Shànghǎi', ru:'Шанхай — город небоскрёбов'},
+  {icon:'🌆', ch:'香港', py:'Xiānggǎng', ru:'Гонконг — город на море'}
+];
+let curCity=null;
+function nextCity(){
+  curCity=cityData[Math.floor(Math.random()*cityData.length)];
+  document.getElementById('cityShow').textContent=curCity.icon;
+  document.getElementById('cityAns').textContent='';
+}
+function revealCity(){
+  if(!curCity) return;
+  document.getElementById('cityAns').textContent=curCity.ch+' · '+curCity.py+' · '+curCity.ru;
+}
+function speakCity(){ if(curCity) speak(curCity.ch); }
+const cityPairs=[{l:'北京 🏯', r:'Běijīng'},{l:'上海 🌃', r:'Shànghǎi'},{l:'香港 🌆', r:'Xiānggǎng'}];
+function initCityMatch(){ buildMatch('cityMatch','cityMsg',cityPairs); }
+initCityMatch();
+
+/* ============ КОНСТРУКТОР ПРЕДЛОЖЕНИЙ ============ */
+const sentences=[
+  {target:'Где ты живёшь?', words:['你','家','在','哪儿'], extra:['我','很','好']},
+  {target:'Я живу в Пекине.', words:['我','家','在','北','京'], extra:['你','哪','儿']},
+  {target:'Я живу в Шанхае.', words:['我','家','在','上','海'], extra:['他','北','京']},
+  {target:'Я живу в Гонконге.', words:['我','家','在','香','港'], extra:['在','哪儿','你']},
+  {target:'А где живёт он?', words:['他','家','在','哪儿'], extra:['我','上','海']},
+  {target:'Привет!', words:['你','好'], extra:['吗','我','在']},
+  {target:'Как дела?', words:['你','好','吗'], extra:['很','我','家']},
+  {target:'Как тебя зовут?', words:['你','叫','什么'], extra:['是','哪','在']},
+  {target:'Ты из какой страны?', words:['你','是','哪','国','人'], extra:['叫','我','家']}
+];
+let sIndex=0;
+function renderSentence(){
+  sIndex=Math.floor(Math.random()*sentences.length);
+  const s=sentences[sIndex];
+  document.getElementById('sbTarget').textContent=s.target;
+  document.getElementById('sbMsg').textContent=''; document.getElementById('sbMsg').className='feedback';
+  document.getElementById('slot').innerHTML='';
+  const chips=document.getElementById('chips'); chips.innerHTML='';
+  const all=[...s.words.map(w=>({w})), ...s.extra.map(w=>({w}))].sort(()=>Math.random()-0.5);
+  all.forEach(item=>{
+    const c=document.createElement('button'); c.className='chip'; c.textContent=item.w;
+    c.onclick=()=>{
+      if(c.classList.contains('used'))return;
+      const slot=document.getElementById('slot');
+      const inSlot=document.createElement('button'); inSlot.className='chip'; inSlot.textContent=item.w;
+      c.classList.add('used');
+      inSlot.onclick=()=>{ inSlot.remove(); c.classList.remove('used'); };
+      slot.appendChild(inSlot);
+    };
+    chips.appendChild(c);
+  });
+}
+function checkSentence(){
+  const s=sentences[sIndex];
+  const built=[...document.querySelectorAll('#slot .chip')].map(c=>c.textContent).join('');
+  const right=s.words.join('');
+  const msg=document.getElementById('sbMsg');
+  if(built===right){
+    msg.textContent='✅ Отлично! Правильно: '+right; msg.className='feedback ok';
+    speak(right);
+  }else{
+    msg.textContent='❌ Пока не так. Подумайте ещё!'; msg.className='feedback no';
+  }
+}
+renderSentence();
+
+/* ============ ТУРНИР ============ */
+const quiz=[
+  {q:'Как по-китайски «где?»', a:['什么 shénme','哪儿 nǎr','哪 nǎ'], c:1},
+  {q:'Что значит иероглиф 家 (jiā)?', a:['школа','дом, семья','город'], c:1},
+  {q:'Как спросить «Где ты живёшь?»', a:['你家在哪儿? Nǐ jiā zài nǎr?','你叫什么? Nǐ jiào shénme?','你好吗? Nǐ hǎo ma?'], c:0},
+  {q:'Что значит 在 (zài)?', a:['идти','есть, кушать','находиться в/на'], c:2},
+  {q:'«Я живу в Пекине» по-китайски:', a:['我是北京人。','我家在北京。 Wǒ jiā zài Běijīng.','我在北京好。'], c:1},
+  {q:'Что значит иероглиф 人 (rén)?', a:['страна','человек, люди','дом'], c:1},
+  {q:'Какой иероглиф читается «nǎ»?', a:['叫','哪','是'], c:1},
+  {q:'Shànghǎi (上海) — это какой город?', a:['Пекин','Шанхай','Гонконг'], c:1},
+  {q:'Как переводится 你是哪国人?', a:['Как тебя зовут?','Ты из какой страны?','Где ты живёшь?'], c:1},
+  {q:'他 (tā) — это…', a:['она','он, его','они'], c:1},
+  {q:'Как по-китайски «очень»?', a:['很 hěn','好 hǎo','我 wǒ'], c:0},
+  {q:'Xiānggǎng (香港) — это…', a:['Гонконг 🌆','Шанхай 🌃','Пекин 🏯'], c:0}
+];
+let qOrder=[], qIdx=-1;
+function shuffleQuiz(){ qOrder=quiz.map((_,i)=>i).sort(()=>Math.random()-0.5); qIdx=-1; }
+shuffleQuiz();
+function nextQuiz(){
+  qIdx++;
+  if(qIdx>=quiz.length){
+    document.getElementById('quizBox').innerHTML='<div class="qcard" style="text-align:center;font-size:20px;font-weight:800">🎉 Все вопросы пройдены! Смотрите итоговый счёт.</div>';
+    document.getElementById('quizNextBtn').style.display='none';
+    document.getElementById('quizProgress').textContent='';
+    return;
+  }
+  const item=quiz[qOrder[qIdx]];
+  const box=document.getElementById('quizBox');
+  box.innerHTML='';
+  const card=document.createElement('div'); card.className='qcard';
+  card.innerHTML='<div class="q">Вопрос '+(qIdx+1)+' / '+quiz.length+': '+item.q+'</div>';
+  const order=item.a.map((_,i)=>i).sort(()=>Math.random()-0.5);
+  order.forEach(ai=>{
+    const b=document.createElement('button'); b.className='ans'; b.textContent=item.a[ai];
+    b.onclick=()=>{
+      card.classList.add('locked');
+      const btns=card.querySelectorAll('.ans');
+      btns[item.c].classList.add('right');
+      if(ai===item.c){ card.querySelector('.q').innerHTML+=' — <span style="color:var(--green)">✅ Верно!</span>'; }
+      else{ b.classList.add('wrong'); card.querySelector('.q').innerHTML+=' — <span style="color:var(--red)">❌ Неверно</span>'; }
+    };
+    card.appendChild(b);
+  });
+  box.appendChild(card);
+  document.getElementById('quizProgress').textContent='Отвечает команда: '+((qIdx%2===0)?'🐼 Команда 1':'🐯 Команда 2');
+}
+nextQuiz();
+
+/* ============ БИЛЕТЫ ============ */
+const tickets=[
+  'Скажи: привет, как дела, у меня всё хорошо',
+  'Скажи: как тебя зовут, меня зовут (своё имя)',
+  'Скажи: ты из какой страны, я из России',
+  'Скажи: где ты живёшь, я живу в Пекине/Шанхае/Гонконге',
+  'Назови 3 иероглифа из уроков 1–2 и их значение',
+  'Назови все новые слова урока 3 (7 слов)',
+  'Прочитай: 你好! 你好吗? 我很好。'
+];
+let lastTicket=-1;
+function nextTicket(){
+  let i; do{ i=Math.floor(Math.random()*tickets.length); }while(i===lastTicket && tickets.length>1);
+  lastTicket=i;
+  document.getElementById('ticketBox').innerHTML='🎫 <b>Билет:</b> '+tickets[i]+'<br><span style="font-size:14px;color:#868e96">Ждём ответа… после ответа все хором повторяем! 🗣️</span>';
+}
+
+/* ============ ФИНАЛ ============ */
+function finishLesson(){
+  const a=sA, b=sB;
+  const nA=document.getElementById('teamAname').value, nB=document.getElementById('teamBname').value;
+  const msg=document.getElementById('finalMsg');
+  if(a===b){
+    msg.textContent='🤝 Ничья! '+a+' : '+b+' — обе команды молодцы! 你们都很好!';
+  }else{
+    const win=a>b? nA : nB;
+    msg.textContent='🏆 Победила команда '+win+'! Счёт '+a+' : '+b+'. Всем — аплодисменты! 👏👏👏';
+  }
+  speak('你们都很好');
+}
+</script>
+</body>
+</html>
